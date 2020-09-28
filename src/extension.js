@@ -11,12 +11,17 @@ class TerminalLink {
 }
 
 class TerminalLinkProvider {
+	constructor(jira_base_url) {
+		this.jira_base_url = jira_base_url;
+	}
+
 	provideTerminalLinks(context, token) {
 		return new Promise((resolve) => {
 			const fileRegex = /\b[A-Z]+-[0-9]+\b/g;
 			const results = [];
 			var match;
-			while ((match = fileRegex.exec(context.line)) !== null && !token.isCancellationRequested) {
+			while ((match = fileRegex.exec(context.line)) !== null &&
+					!token.isCancellationRequested) {
 				const matchIndex = fileRegex.lastIndex;
 				const ticket = match[0];
 				const offset = matchIndex - ticket.length;
@@ -29,7 +34,8 @@ class TerminalLinkProvider {
 	}
 
 	handleTerminalLink(link) {
-		vscode.env.openExternal(vscode.Uri.parse(`http://go/j/${link.ticket}`));
+		const ticket_uri = `${this.jira_base_url}/${link.ticket}`;
+		vscode.env.openExternal(vscode.Uri.parse(ticket_uri));
 	}
 }
 
@@ -38,11 +44,27 @@ function activate(context) {
 		while (context.subscriptions.length > 1) {
 			context.subscriptions.pop()?.dispose();
 		}
-		vscode.window.registerTerminalLinkProvider(new TerminalLinkProvider());
+		const jira_base_url = vscode.workspace.getConfiguration().get(
+			'jira_ticket_links.jira_url');
+
+		if (jira_base_url == '') {
+			console.error('[Jira Ticket Links] Must set Jira base URI in the extension settings.');
+			return;
+		}
+
+		try {
+			vscode.Uri.parse(jira_base_url, true)
+		} catch (e) {
+			console.error('[Jira Ticket Links] Unable to parse user-provided Jira base URL');
+			return;
+		}
+
+		vscode.window.registerTerminalLinkProvider(new TerminalLinkProvider(jira_base_url));
 	};
+
 	context.subscriptions.push(
-		vscode.workspace.onDidChangeConfiguration((event) => {
-			if (event.affectsConfiguration('terminalFileLink')) {
+		vscode.workspace.onDidChangeConfiguration((e) => {
+			if (e.affectsConfiguration('jira_ticket_links')) {
 				init();
 			}
 		}));
