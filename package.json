@@ -1,0 +1,39 @@
+{
+	"name": "jira-ticket-links",
+	"displayName": "Jira Ticket Links",
+	"description": "Link to Jira tickets in the terminal.",
+	"version": "0.0.1",
+	"publisher": "apccurtiss",
+	"engines": {
+		"vscode": "^1.49.0"
+	},
+	"keywords": [
+		"jira"
+	],
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./src/extension.js",
+	"contributes": {
+		"configuration": [
+			{
+				"title": "Jira Ticket Links Configuration",
+				"properties": {
+					"jira_ticket_links.jira_url": {
+						"type": "string",
+						"default": "",
+						"description": "Jira base URL (e.g. https://jira.example.biz/)."
+					}
+				}
+			}
+		]
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.49.0",
+		"@types/node": "^14.0.27",
+		"vscode-test": "^1.4.0"
+	}
+}
