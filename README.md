@@ -12,4 +12,4 @@ Add links to Jira tickets in the terminal.
 
 ## Contributing / Feature Requests
 
-* Want more out of your friendly Jira ticket linker than simply Jira ticket links? Sure, you do you. Open an [issue](https://github.com/apccurtiss/vscode-jira-ticket-links/issues) and feel free to make a pull request.
+* Want more out of your friendly Jira ticket linker than just Jira ticket links? Open an [issue](https://github.com/apccurtiss/vscode-jira-ticket-links/issues) and feel free to make a pull request.
